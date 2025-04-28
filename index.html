@@ -7,39 +7,49 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary: #3498db;
-            --secondary: #2ecc71;
-            --danger: #e74c3c;
-            --success: #2ecc71;
+            --primary: #75ba1a;
+            --secondary: #fb0088;
+            --danger: #fb0088;
+            --success: #75ba1a;
+            --warning: #ff9800;
             --light: #FFFFFF;
-            --dark: #34495e;
-            --bg: #ecf0f1;
-            --border: #bdc3c7;
-            --highlight: #d6eaf8;
-            --text: #2c3e50;
+            --dark: #292929;
+            --bg: #F7F7F7;
+            --border: #e0e0e0;
+            --highlight: #ffd6e7;
+            --text: #333333;
             --card-bg: #FFFFFF;
-            --table-header-bg: rgba(52, 152, 219, 0.1);
+            --table-header-bg: rgba(117,186,26,0.1);
             --table-row-bg: #FFFFFF;
-            --open-color: #2ecc71;
-            --closed-color: #e74c3c;
+            --open-color: #75ba1a;
+            --closed-color: #fb0088;
+            --pending-color: #ff9800;
+            --filter-open-bg: rgba(117,186,26,0.2);
+            --filter-closed-bg: rgba(251,0,136,0.2);
+            --filter-all-bg: rgba(189,189,189,0.2);
         }
 
         .dark-mode {
-            --primary: #3498db;
-            --secondary: #2ecc71;
-            --danger: #e74c3c;
-            --success: #2ecc71;
-            --light: #2c3e50;
-            --dark: #ecf0f1;
-            --bg: #1a1a1a;
-            --border: #34495e;
-            --highlight: #2c3e50;
-            --text: #ecf0f1;
-            --card-bg: #2c3e50;
-            --table-header-bg: rgba(52, 152, 219, 0.2);
-            --table-row-bg: #34495e;
-            --open-color: #27ae60;
-            --closed-color: #c0392b;
+            --primary: #75ba1a;
+            --secondary: #fb0088;
+            --danger: #fb0088;
+            --success: #75ba1a;
+            --warning: #ff9800;
+            --light: #1a1a1a;
+            --dark: #e0e0e0;
+            --bg: #121212;
+            --border: #333333;
+            --highlight: #4a222f;
+            --text: #e0e0e0;
+            --card-bg: #1e1e1e;
+            --table-header-bg: rgba(117,186,26,0.2);
+            --table-row-bg: #252525;
+            --open-color: #75ba1a;
+            --closed-color: #fb0088;
+            --pending-color: #ff9800;
+            --filter-open-bg: rgba(117,186,26,0.4);
+            --filter-closed-bg: rgba(251,0,136,0.4);
+            --filter-all-bg: rgba(189,189,189,0.4);
         }
 
         * {
@@ -131,6 +141,7 @@
             background-color: var(--card-bg);
             color: var(--text);
             transition: all 0.3s ease;
+            white-space: pre;
         }
 
         .paste-area:focus {
@@ -181,7 +192,7 @@
         }
 
         .btn-primary:hover {
-            background: #2980b9;
+            background: var(--secondary);
         }
 
         .btn-secondary {
@@ -200,7 +211,7 @@
         }
 
         .btn-danger:hover {
-            background: #c0392b;
+            background: #d33426;
         }
 
         .btn-success {
@@ -209,7 +220,16 @@
         }
 
         .btn-success:hover {
-            background: #27ae60;
+            background: #5aa116;
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #e68a00;
         }
 
         table {
@@ -241,15 +261,21 @@
         }
 
         .open-status {
-            background-color: rgba(46, 204, 113, 0.2);
+            background-color: rgba(117,186,26,0.2);
             font-weight: 600;
             color: var(--open-color);
         }
 
         .closed-status {
-            background-color: rgba(231, 76, 60, 0.2);
+            background-color: rgba(251,0,136,0.2);
             font-weight: 600;
             color: var(--closed-color);
+        }
+
+        .pending-status {
+            background-color: rgba(255,152,0,0.2);
+            font-weight: 600;
+            color: var(--pending-color);
         }
 
         .copy-tick {
@@ -265,6 +291,32 @@
 
         .btn-with-tick {
             position: relative;
+        }
+
+        .stats-container {
+            background-color: var(--highlight);
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            display: none;
+            font-size: 0.9rem;
+        }
+
+        .stats-row {
+            display: flex;
+            margin-bottom: 0.5rem;
+            align-items: baseline;
+        }
+
+        .stats-label {
+            flex: 1;
+            color: var(--text);
+        }
+
+        .stats-value {
+            font-weight: bold;
+            margin-left: 10px;
+            color: var(--text);
         }
 
         footer {
@@ -297,9 +349,98 @@
 
         .output-toolbar {
             display: flex;
-            justify-content: flex-end;
+            justify-content: space-between;
             margin-top: 1rem;
             gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+
+        .filter-btn.active {
+            transform: scale(1.05);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .filter-all {
+            background-color: var(--filter-all-bg);
+            color: var(--text);
+        }
+
+        .filter-open {
+            background-color: var(--filter-open-bg);
+            color: var(--open-color);
+        }
+
+        .filter-closed {
+            background-color: var(--filter-closed-bg);
+            color: var(--closed-color);
+        }
+
+        .copy-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .counter {
+            background-color: var(--highlight);
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .counter-row {
+            display: flex;
+            margin-bottom: 0.5rem;
+        }
+
+        .counter-label {
+            flex: 1;
+            color: var(--text);
+        }
+
+        .counter-value {
+            font-weight: bold;
+            margin-left: 10px;
+            color: var(--text);
+        }
+
+        .copy-status {
+            margin: 0.5rem 0;
+            padding: 0.8rem;
+            text-align: center;
+            font-size: 0.9rem;
+            color: black;
+            background-color: var(--status-pink);
+            border-radius: 6px;
+            border-left: 4px solid var(--secondary);
+            font-weight: 500;
+            display: none;
+        }
+
+        .copy-status.show {
+            display: block;
+        }
+
+        .copy-status.copied {
+            background-color: var(--copied-bg);
+            border-left-color: var(--copied-bg);
+            color: black;
         }
 
         .modal {
@@ -371,6 +512,15 @@
                 width: 100%;
             }
 
+            .output-toolbar {
+                flex-direction: column;
+            }
+
+            .filter-buttons, .copy-buttons {
+                width: 100%;
+                justify-content: center;
+            }
+
             .modal-content {
                 width: 95%;
                 margin: 20% auto;
@@ -416,33 +566,72 @@
             <button class="btn btn-success" onclick="showAddScrapModal()">
                 <i class="fas fa-plus"></i> Add Scrap
             </button>
+            <button class="btn btn-warning" onclick="addLeadingZeros()">
+                <i class="fas fa-plus-circle"></i> Add Leading Zeros
+            </button>
         </div>
+
+        <div id="counter" class="counter">
+            <div class="counter-row">
+                <span class="counter-label">Current Position:</span>
+                <span class="counter-value" id="currentPosition">0</span>
+            </div>
+            <div class="counter-row">
+                <span class="counter-label">Total Numbers:</span>
+                <span class="counter-value" id="totalNumbers">0</span>
+            </div>
+            <div class="counter-row">
+                <span class="counter-label">Open Numbers:</span>
+                <span class="counter-value" id="openNumbers">0</span>
+            </div>
+            <div class="counter-row">
+                <span class="counter-label">Closed Numbers:</span>
+                <span class="counter-value" id="closedNumbers">0</span>
+            </div>
+        </div>
+
+        <div class="copy-status" id="copyStatus"></div>
 
         <div class="output-section">
             <h3>Results</h3>
             <div class="output-toolbar">
-                <button class="btn btn-primary btn-with-tick" onclick="copyAllData()">
-                    <i class="fas fa-copy"></i> Copy All
-                    <span class="copy-tick"><i class="fas fa-check"></i></span>
-                </button>
-                <button class="btn btn-success btn-with-tick" onclick="copyNextNumber()">
-                    <i class="fas fa-copy"></i> Copy Next
-                    <span class="copy-tick"><i class="fas fa-check"></i></span>
-                </button>
+                <div class="filter-buttons">
+                    <button class="filter-btn filter-all active" onclick="filterTable('all')">Show All</button>
+                    <button class="filter-btn filter-open" onclick="filterTable('open')">Show Open Only</button>
+                    <button class="filter-btn filter-closed" onclick="filterTable('closed')">Show Closed Only</button>
+                </div>
+                <div class="copy-buttons">
+                    <button class="btn btn-primary btn-with-tick" onclick="copyAllData()">
+                        <i class="fas fa-copy"></i> Copy All
+                        <span class="copy-tick"><i class="fas fa-check"></i></span>
+                    </button>
+                    <button class="btn btn-success btn-with-tick" onclick="copyNextNumber()">
+                        <i class="fas fa-arrow-right"></i> Copy Next (#<span id="nextNumberIndex">0</span>)
+                        <span class="copy-tick"><i class="fas fa-check"></i></span>
+                    </button>
+                    <button class="btn btn-secondary btn-with-tick" onclick="copyPreviousNumber()">
+                        <i class="fas fa-arrow-left"></i> Copy Back
+                        <span class="copy-tick"><i class="fas fa-check"></i></span>
+                    </button>
+                </div>
             </div>
             <div id="tableContainer" style="overflow-x: auto;">
                 <table id="dataTable">
                     <thead>
                         <tr>
-                            <th>Phone Number</th>
-                            <th>Status</th>
-                            <th>Remarks</th>
+                            <th>A</th>
+                            <th>B</th>
+                            <th>C</th>
+                            <th>D</th>
+                            <th>E</th>
+                            <th>F (Status)</th>
+                            <th>G (Remarks)</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-                        <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-                        <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+                        <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+                        <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+                        <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -544,6 +733,7 @@
             49105, 48935, 49102, 49020, 49148, 48936, 47207, 49032, 48627, 48282, 49040, 47230, 48380
         ]);
         let isDarkMode = false;
+        let currentFilter = 'all';
 
         document.addEventListener('DOMContentLoaded', function() {
             // Load saved OB Agent IDs from localStorage if available
@@ -556,6 +746,21 @@
             if (localStorage.getItem('darkMode') === 'enabled') {
                 enableDarkMode();
             }
+
+            // Add keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                // Ctrl+Enter for Copy Next
+                if (e.ctrlKey && e.key === 'Enter') {
+                    e.preventDefault();
+                    copyNextNumber();
+                }
+                
+                // Ctrl+Backspace for Copy Back
+                if (e.ctrlKey && e.key === 'Backspace') {
+                    e.preventDefault();
+                    copyPreviousNumber();
+                }
+            });
         });
 
         // Theme toggle functionality
@@ -621,22 +826,19 @@
                         }
                     }
                 }
-                alert('No text data found in clipboard');
+                showCopyStatus('No text data found in clipboard', false);
             } catch (err) {
                 console.error('Failed to read clipboard:', err);
                 document.getElementById(areaId).focus();
-                alert('Please use Ctrl+V to paste your data into the input box');
+                showCopyStatus('Please use Ctrl+V to paste your data into the input box', false);
             }
         }
 
-        // Normalize phone numbers by removing all non-digit characters and leading zeros
+        // Normalize phone numbers by removing all non-digit characters
         function normalizePhoneNumber(phone) {
             if (!phone) return '';
             // Remove all non-digit characters
-            let normalized = phone.replace(/\D/g, '');
-            // Remove leading zeros (but keep at least one digit)
-            normalized = normalized.replace(/^0+/, '');
-            return normalized || '0'; // Return '0' if empty after normalization
+            return phone.replace(/\D/g, '');
         }
 
         function showAddScrapModal() {
@@ -652,17 +854,19 @@
             const scrapDataText = document.getElementById('scrapDataArea').textContent.trim();
             
             if (!scrapDataText) {
-                alert('Please paste scrap data before adding');
+                showCopyStatus('Please paste scrap data before adding', false);
                 return;
             }
 
-            // Parse scrap data (assuming first column is phone number)
+            // Parse scrap data (tab-separated columns)
             const scrapRows = scrapDataText.split(/\r\n|\n|\r/).filter(row => row.trim() !== '');
             
             scrapData = scrapRows.map(row => {
                 const columns = row.split(/\t/);
-                const phoneNumber = columns[0] ? columns[0].trim() : '';
+                let phoneNumber = columns[0] ? columns[0].trim() : '';
+                
                 return {
+                    columns: columns,
                     number: phoneNumber,
                     normalizedNumber: normalizePhoneNumber(phoneNumber),
                     status: 'Pending',
@@ -676,65 +880,123 @@
             // Render the table
             renderTable(scrapData);
             
+            // Update counter
+            updateCounter();
+            
+            // Show counter
+            document.getElementById('counter').style.display = 'block';
+            
             // Close the modal and clear the textarea
             closeAddScrapModal();
             document.getElementById('scrapDataArea').textContent = '';
             
-            alert(`Added ${scrapData.length} numbers from scrap data`);
+            showCopyStatus(`Added ${scrapData.length} numbers from scrap data`, true);
+        }
+
+        function addLeadingZeros() {
+            if (scrapData.length === 0) {
+                showCopyStatus('No scrap data to process. Please add scrap data first.', false);
+                return;
+            }
+            
+            let modifiedCount = 0;
+            
+            scrapData.forEach(item => {
+                // Check if the number is missing leading zero (Pakistan number pattern)
+                const normalized = normalizePhoneNumber(item.number);
+                if (/^3\d{9}$/.test(normalized)) {
+                    item.number = '0' + normalized;
+                    item.normalizedNumber = normalized;
+                    modifiedCount++;
+                } else if (/^\d{10}$/.test(normalized)) {
+                    item.normalizedNumber = normalized;
+                }
+            });
+            
+            if (modifiedCount > 0) {
+                renderTable(scrapData);
+                showCopyStatus(`Added leading zeros to ${modifiedCount} numbers`, true);
+            } else {
+                showCopyStatus('No numbers needed leading zeros added', true);
+            }
         }
 
         function processCCData() {
             const ccDataText = document.getElementById('ccDataArea').textContent.trim();
             
             if (!ccDataText) {
-                alert('Please paste CC record data before processing');
+                showCopyStatus('Please paste CC record data before processing', false);
                 return;
             }
 
             if (scrapData.length === 0) {
-                alert('Please add scrap data first');
+                showCopyStatus('Please add scrap data first', false);
                 return;
             }
 
             // Parse CC data to extract phone numbers and staff IDs
             const ccRows = ccDataText.split(/\r\n|\n|\r/).filter(row => row.trim() !== '');
             
-            // Process each scrap data item
-            scrapData.forEach(item => {
-                // Find matching CC record for this number
-                const matchingRecord = ccRows.find(row => {
-                    // Check if row contains the normalized phone number
-                    const normalizedRowNumber = normalizePhoneNumber(row);
-                    return normalizedRowNumber.includes(item.normalizedNumber) || 
-                           item.normalizedNumber.includes(normalizedRowNumber);
-                });
-
-                if (matchingRecord) {
-                    // Extract staff ID from the matching record
-                    const staffIdMatch = matchingRecord.match(/\b\d{4,5}\b/);
-                    if (staffIdMatch) {
-                        const staffId = parseInt(staffIdMatch[0]);
-                        if (obAgentIDs.has(staffId)) {
-                            item.status = 'Closed';
-                            item.remarks = `OB Agent ID ${staffId} found`;
-                        } else {
-                            item.status = 'Open';
-                            item.remarks = 'No OB Agent ID found';
-                        }
-                    } else {
-                        item.status = 'Open';
-                        item.remarks = 'No Staff ID found in record';
-                    }
+            let processedCount = 0;
+            
+            // Process each CC record
+            ccRows.forEach(row => {
+                const columns = row.split(/\t/);
+                
+                // Try to find phone number in column G (index 6) or similar
+                let phoneNumber = '';
+                if (columns.length >= 7) {
+                    phoneNumber = normalizePhoneNumber(columns[6]);
                 } else {
-                    item.status = 'Open';
-                    item.remarks = 'No matching record found in CC data';
+                    // If not enough columns, try to find any phone number in the row
+                    const phoneMatch = row.match(/\b\d{10,11}\b/);
+                    if (phoneMatch) phoneNumber = normalizePhoneNumber(phoneMatch[0]);
+                }
+                
+                if (!phoneNumber) return;
+                
+                // Try to find staff ID in column O (index 14) or similar
+                let staffId = null;
+                if (columns.length >= 15) {
+                    const idMatch = columns[14].match(/\b\d{4,5}\b/);
+                    if (idMatch) staffId = parseInt(idMatch[0]);
+                } else {
+                    // If not enough columns, try to find any ID in the row
+                    const idMatch = row.match(/\b\d{4,5}\b/);
+                    if (idMatch) staffId = parseInt(idMatch[0]);
+                }
+                
+                // Find matching scrap data item
+                const matchingItem = scrapData.find(item => 
+                    item.normalizedNumber === phoneNumber || 
+                    phoneNumber.includes(item.normalizedNumber) || 
+                    item.normalizedNumber.includes(phoneNumber)
+                );
+                
+                if (matchingItem) {
+                    if (staffId !== null && obAgentIDs.has(staffId)) {
+                        matchingItem.status = 'Closed';
+                        matchingItem.remarks = `OB Agent ID ${staffId} found`;
+                        processedCount++;
+                    } else if (matchingItem.status === 'Pending') {
+                        matchingItem.status = 'Open';
+                        matchingItem.remarks = staffId ? 'No OB Agent ID found' : 'No Staff ID found';
+                        processedCount++;
+                    }
                 }
             });
 
             // Render the updated table
             renderTable(scrapData);
             
-            alert('Processing complete. Status updated for all numbers.');
+            // Update counter
+            updateCounter();
+            
+            if (processedCount > 0) {
+                showCopyStatus(`Updated status for ${processedCount} numbers`, true);
+            } else {
+                showCopyStatus('No matching numbers found in CC data', false);
+            }
         }
 
         function renderTable(data) {
@@ -746,7 +1008,7 @@
                 // Add empty rows for better UI
                 for (let i = 0; i < 3; i++) {
                     const row = document.createElement('tr');
-                    for (let j = 0; j < 3; j++) {
+                    for (let j = 0; j < 7; j++) {
                         const td = document.createElement('td');
                         td.innerHTML = '&nbsp;';
                         row.appendChild(td);
@@ -756,22 +1018,41 @@
                 return;
             }
             
-            data.forEach(item => {
+            data.forEach((item, index) => {
+                // Skip if filtered
+                if (currentFilter === 'open' && item.status !== 'Open') return;
+                if (currentFilter === 'closed' && item.status !== 'Closed') return;
+                
                 const row = document.createElement('tr');
+                row.dataset.index = index;
                 
-                const numberCell = document.createElement('td');
-                numberCell.textContent = item.number;
-                row.appendChild(numberCell);
+                // Add all columns from scrap data
+                for (let i = 0; i < 5 && i < item.columns.length; i++) {
+                    const cell = document.createElement('td');
+                    cell.textContent = item.columns[i] || '';
+                    row.appendChild(cell);
+                }
                 
+                // Add empty cells if there are fewer than 5 columns
+                for (let i = item.columns.length; i < 5; i++) {
+                    const cell = document.createElement('td');
+                    cell.innerHTML = '&nbsp;';
+                    row.appendChild(cell);
+                }
+                
+                // Add status cell
                 const statusCell = document.createElement('td');
                 statusCell.textContent = item.status;
                 if (item.status === 'Open') {
                     statusCell.classList.add('open-status');
                 } else if (item.status === 'Closed') {
                     statusCell.classList.add('closed-status');
+                } else {
+                    statusCell.classList.add('pending-status');
                 }
                 row.appendChild(statusCell);
                 
+                // Add remarks cell
                 const remarksCell = document.createElement('td');
                 remarksCell.textContent = item.remarks;
                 row.appendChild(remarksCell);
@@ -780,19 +1061,65 @@
             });
         }
 
+        function filterTable(filter) {
+            currentFilter = filter;
+            
+            // Update active button
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`.filter-${filter}`).classList.add('active');
+            
+            // Re-render table
+            renderTable(scrapData);
+        }
+
+        function updateCounter() {
+            document.getElementById('currentPosition').textContent = currentIndex + 1;
+            document.getElementById('totalNumbers').textContent = scrapData.length;
+            
+            const openCount = scrapData.filter(item => item.status === 'Open').length;
+            const closedCount = scrapData.filter(item => item.status === 'Closed').length;
+            
+            document.getElementById('openNumbers').textContent = openCount;
+            document.getElementById('closedNumbers').textContent = closedCount;
+            
+            // Update next number index
+            document.getElementById('nextNumberIndex').textContent = currentIndex + 1;
+        }
+
         function clearCCData() {
             document.getElementById('ccDataArea').textContent = '';
         }
 
         function copyAllData() {
             if (scrapData.length === 0) {
-                alert('No data to copy. Please add scrap data first.');
+                showCopyStatus('No data to copy. Please add scrap data first.', false);
                 return;
             }
             
-            // Create CSV-like text
-            const headers = ['Phone Number', 'Status', 'Remarks'];
-            const rows = scrapData.map(item => [item.number, item.status, item.remarks]);
+            // Filter data based on current filter
+            let filteredData = scrapData;
+            if (currentFilter === 'open') {
+                filteredData = scrapData.filter(item => item.status === 'Open');
+            } else if (currentFilter === 'closed') {
+                filteredData = scrapData.filter(item => item.status === 'Closed');
+            }
+            
+            // Create CSV-like text with all columns
+            const headers = ['A', 'B', 'C', 'D', 'E', 'F (Status)', 'G (Remarks)'];
+            const rows = filteredData.map(item => [
+                ...item.columns.slice(0, 5),
+                item.status,
+                item.remarks
+            ]);
+            
+            // Ensure we have 5 columns for each row
+            rows.forEach(row => {
+                while (row.length < 5) row.push('');
+                row.push(row[5] || ''); // Status
+                row.push(row[6] || ''); // Remarks
+            });
             
             const csvContent = [headers, ...rows].map(row => row.join('\t')).join('\n');
             
@@ -802,15 +1129,17 @@
                 setTimeout(() => {
                     tick.style.display = 'none';
                 }, 2000);
+                
+                showCopyStatus(`Copied ${filteredData.length} items to clipboard`, true);
             }).catch(err => {
                 console.error('Failed to copy:', err);
-                alert('Failed to copy data. Please try again.');
+                showCopyStatus('Failed to copy data. Please try again.', false);
             });
         }
 
         function copyNextNumber() {
             if (scrapData.length === 0) {
-                alert('No data to copy. Please add scrap data first.');
+                showCopyStatus('No data to copy. Please add scrap data first.', false);
                 return;
             }
             
@@ -818,7 +1147,8 @@
                 currentIndex = 0; // Reset to start
             }
             
-            const numberToCopy = scrapData[currentIndex].number;
+            const item = scrapData[currentIndex];
+            const numberToCopy = item.number;
             
             navigator.clipboard.writeText(numberToCopy).then(() => {
                 const tick = document.querySelectorAll('.output-toolbar .copy-tick')[1];
@@ -827,12 +1157,67 @@
                     tick.style.display = 'none';
                 }, 2000);
                 
+                showCopyStatus(`Copied: ${numberToCopy} (${item.status})`, true);
+                
                 // Move to next number
                 currentIndex++;
+                
+                // Update counter
+                updateCounter();
             }).catch(err => {
                 console.error('Failed to copy:', err);
-                alert('Failed to copy number. Please try again.');
+                showCopyStatus('Failed to copy number. Please try again.', false);
             });
+        }
+
+        function copyPreviousNumber() {
+            if (scrapData.length === 0) {
+                showCopyStatus('No data to copy. Please add scrap data first.', false);
+                return;
+            }
+            
+            if (currentIndex <= 0) {
+                currentIndex = scrapData.length; // Start from end
+            }
+            
+            currentIndex--;
+            const item = scrapData[currentIndex];
+            const numberToCopy = item.number;
+            
+            navigator.clipboard.writeText(numberToCopy).then(() => {
+                const tick = document.querySelectorAll('.output-toolbar .copy-tick')[2];
+                tick.style.display = 'inline-block';
+                setTimeout(() => {
+                    tick.style.display = 'none';
+                }, 2000);
+                
+                showCopyStatus(`Copied: ${numberToCopy} (${item.status})`, true);
+                
+                // Update counter
+                updateCounter();
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+                showCopyStatus('Failed to copy number. Please try again.', false);
+            });
+        }
+
+        function showCopyStatus(message, isSuccess) {
+            const copyStatus = document.getElementById('copyStatus');
+            copyStatus.textContent = message;
+            copyStatus.className = 'copy-status show';
+            
+            if (isSuccess) {
+                copyStatus.classList.add('copied');
+                copyStatus.classList.remove('error');
+            } else {
+                copyStatus.classList.add('error');
+                copyStatus.classList.remove('copied');
+            }
+            
+            // Hide notification after 3 seconds
+            setTimeout(() => {
+                copyStatus.classList.remove('show');
+            }, 3000);
         }
 
         function showEditOBIDsModal() {
@@ -854,19 +1239,44 @@
             // Reset to default OB Agent IDs
             obAgentIDs = new Set([
                 46857, 10949, 4295, 45668, 45720, 11099, 44715, 48343, 46973, 54884, 2743, 48618, 48641, 48152, 45403, 2323, 
-                // ... (all the default IDs you provided)
-                48380
+                48646, 4826, 11911, 44372, 4900, 47923, 47455, 48587, 54888, 3239, 2680, 48883, 47856, 46238, 48882, 46771, 
+                48362, 44799, 48036, 48375, 44761, 47792, 44457, 48872, 46088, 48126, 2697, 43942, 43207, 46288, 43406, 48396, 
+                2101, 54871, 48664, 48932, 48606, 2593, 11488, 44374, 2413, 43365, 44312, 46487, 42234, 48122, 43647, 45470, 
+                11929, 45863, 2547, 46958, 11475, 46779, 48623, 47104, 47100, 48614, 43075, 48277, 44512, 43393, 42113, 45964, 
+                46633, 48346, 42482, 3011, 44790, 2453, 42141, 2681, 2225, 43171, 49026, 48265, 48805, 46871, 46543, 46019, 
+                42071, 47850, 3024, 2726, 11407, 3070, 46602, 54872, 48594, 2434, 48284, 45910, 3091, 46976, 46002, 48795, 
+                47829, 48048, 11797, 44836, 5675, 48808, 44551, 48297, 44877, 4790, 47838, 46067, 2267, 49091, 48342, 42002, 
+                6364, 48796, 45779, 48313, 6058, 48215, 2282, 48609, 46854, 44619, 48120, 45878, 42500, 3346, 49128, 42036, 
+                4937, 46654, 43930, 45474, 54883, 43810, 48777, 48197, 11888, 46450, 43760, 43272, 49130, 45658, 48865, 48133, 
+                42219, 46849, 54870, 48972, 48925, 46837, 48368, 48886, 47934, 48638, 49047, 49133, 43374, 42856, 47916, 46366, 
+                46291, 44000, 48690, 44041, 45000, 47878, 44080, 44015, 2706, 48616, 49145, 48046, 46931, 46641, 48665, 49112, 
+                48642, 46966, 6050, 47449, 45833, 46877, 48387, 48931, 49111, 48739, 45570, 44788, 45670, 48417, 45545, 2800, 
+                48671, 48801, 4448, 48354, 47750, 46936, 43856, 2942, 3932, 47786, 48586, 48870, 42006, 44144, 4002, 48800, 
+                48667, 44688, 2846, 3330, 45854, 48194, 3143, 49152, 49029, 42265, 3231, 45673, 48052, 48927, 42504, 4355, 
+                49123, 48153, 42046, 2946, 48621, 43593, 48988, 44545, 45660, 48813, 48659, 48033, 4048, 45401, 46466, 42009, 
+                48328, 48949, 3054, 49052, 49021, 48878, 2284, 48863, 46962, 49076, 45461, 46824, 48896, 45980, 44554, 48906, 
+                48745, 4385, 43874, 44699, 44115, 48652, 48971, 43713, 4037, 48975, 3903, 49002, 42172, 49088, 49087, 2919, 
+                44184, 48011, 48706, 48137, 48034, 48803, 48910, 47393, 46770, 47855, 3167, 48504, 48781, 48729, 47075, 48992, 
+                45913, 4500, 42003, 48890, 46681, 48741, 4696, 47742, 44188, 47961, 47487, 48676, 47950, 49134, 48718, 48782, 
+                46693, 4945, 43753, 2763, 47427, 3710, 49120, 48981, 11848, 48054, 48394, 48864, 3025, 54895, 49043, 2902, 
+                48383, 46471, 49151, 48709, 48163, 48151, 48941, 2755, 49044, 3009, 49146, 46923, 45880, 48854, 47745, 49110, 
+                44169, 4276, 43048, 49006, 44156, 48708, 48702, 48884, 46457, 49031, 49142, 4386, 49109, 43304, 49041, 2868, 
+                49025, 49007, 47754, 44862, 49045, 48207, 47125, 45992, 49141, 43147, 49046, 5991, 46772, 4882, 49147, 48982, 
+                48268, 47788, 48135, 45807, 47784, 46875, 48836, 46872, 42087, 45879, 44472, 43319, 48900, 48688, 43395, 46351, 
+                49140, 49154, 48802, 6042, 48902, 49099, 49080, 48668, 2723, 48697, 48682, 48978, 48123, 47079, 49093, 48707, 
+                49129, 49150, 49137, 48714, 49079, 48156, 48833, 46093, 48711, 48851, 43625, 48898, 49034, 48689, 49138, 48698, 
+                49105, 48935, 49102, 49020, 49148, 48936, 47207, 49032, 48627, 48282, 49040, 47230, 48380
             ]);
             
             document.getElementById('obIDsArea').textContent = Array.from(obAgentIDs).join('\n');
-            alert('Default OB Agent IDs have been restored.');
+            showCopyStatus('Default OB Agent IDs have been restored.', true);
         }
 
         function saveOBIDs() {
             const obIDsText = document.getElementById('obIDsArea').textContent.trim();
             
             if (!obIDsText) {
-                alert('Please enter at least one OB Agent ID');
+                showCopyStatus('Please enter at least one OB Agent ID', false);
                 return;
             }
             
@@ -877,7 +1287,7 @@
                 .map(id => parseInt(id));
             
             if (newIDs.length === 0) {
-                alert('No valid OB Agent IDs found. Please enter numeric IDs only.');
+                showCopyStatus('No valid OB Agent IDs found. Please enter numeric IDs only.', false);
                 return;
             }
             
@@ -888,7 +1298,7 @@
             localStorage.setItem('obAgentIDs', JSON.stringify(Array.from(obAgentIDs)));
             
             closeEditOBIDsModal();
-            alert(`Saved ${obAgentIDs.size} OB Agent IDs. They will be used for processing.`);
+            showCopyStatus(`Saved ${obAgentIDs.size} OB Agent IDs. They will be used for processing.`, true);
         }
 
         // Handle paste events for text areas
