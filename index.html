@@ -7,43 +7,39 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary: #75ba1a;
-            --secondary: #fb0088;
-            --danger: #fb0088;
-            --success: #75ba1a;
-            --warning: #ff9800;
+            --primary: #3498db;
+            --secondary: #2ecc71;
+            --danger: #e74c3c;
+            --success: #2ecc71;
             --light: #FFFFFF;
-            --dark: #292929;
-            --bg: #F7F7F7;
-            --border: #e0e0e0;
-            --highlight: #ffd6e7;
-            --text: #333333;
+            --dark: #34495e;
+            --bg: #ecf0f1;
+            --border: #bdc3c7;
+            --highlight: #d6eaf8;
+            --text: #2c3e50;
             --card-bg: #FFFFFF;
-            --table-header-bg: rgba(117,186,26,0.1);
+            --table-header-bg: rgba(52, 152, 219, 0.1);
             --table-row-bg: #FFFFFF;
-            --open-color: #75ba1a;
-            --closed-color: #fb0088;
-            --pending-color: #ff9800;
+            --open-color: #2ecc71;
+            --closed-color: #e74c3c;
         }
 
         .dark-mode {
-            --primary: #75ba1a;
-            --secondary: #fb0088;
-            --danger: #fb0088;
-            --success: #75ba1a;
-            --warning: #ff9800;
-            --light: #1a1a1a;
-            --dark: #e0e0e0;
-            --bg: #121212;
-            --border: #333333;
-            --highlight: #4a222f;
-            --text: #e0e0e0;
-            --card-bg: #1e1e1e;
-            --table-header-bg: rgba(117,186,26,0.2);
-            --table-row-bg: #252525;
-            --open-color: #75ba1a;
-            --closed-color: #fb0088;
-            --pending-color: #ff9800;
+            --primary: #3498db;
+            --secondary: #2ecc71;
+            --danger: #e74c3c;
+            --success: #2ecc71;
+            --light: #2c3e50;
+            --dark: #ecf0f1;
+            --bg: #1a1a1a;
+            --border: #34495e;
+            --highlight: #2c3e50;
+            --text: #ecf0f1;
+            --card-bg: #2c3e50;
+            --table-header-bg: rgba(52, 152, 219, 0.2);
+            --table-row-bg: #34495e;
+            --open-color: #27ae60;
+            --closed-color: #c0392b;
         }
 
         * {
@@ -135,7 +131,6 @@
             background-color: var(--card-bg);
             color: var(--text);
             transition: all 0.3s ease;
-            white-space: pre;
         }
 
         .paste-area:focus {
@@ -186,7 +181,7 @@
         }
 
         .btn-primary:hover {
-            background: var(--secondary);
+            background: #2980b9;
         }
 
         .btn-secondary {
@@ -205,7 +200,7 @@
         }
 
         .btn-danger:hover {
-            background: #d33426;
+            background: #c0392b;
         }
 
         .btn-success {
@@ -214,16 +209,7 @@
         }
 
         .btn-success:hover {
-            background: #5aa116;
-        }
-
-        .btn-warning {
-            background: var(--warning);
-            color: white;
-        }
-
-        .btn-warning:hover {
-            background: #e68a00;
+            background: #27ae60;
         }
 
         table {
@@ -255,21 +241,15 @@
         }
 
         .open-status {
-            background-color: rgba(117,186,26,0.2);
+            background-color: rgba(46, 204, 113, 0.2);
             font-weight: 600;
             color: var(--open-color);
         }
 
         .closed-status {
-            background-color: rgba(251,0,136,0.2);
+            background-color: rgba(231, 76, 60, 0.2);
             font-weight: 600;
             color: var(--closed-color);
-        }
-
-        .pending-status {
-            background-color: rgba(255,152,0,0.2);
-            font-weight: 600;
-            color: var(--pending-color);
         }
 
         .copy-tick {
@@ -285,32 +265,6 @@
 
         .btn-with-tick {
             position: relative;
-        }
-
-        .stats-container {
-            background-color: var(--highlight);
-            padding: 1rem;
-            border-radius: 8px;
-            margin: 1rem 0;
-            display: none;
-            font-size: 0.9rem;
-        }
-
-        .stats-row {
-            display: flex;
-            margin-bottom: 0.5rem;
-            align-items: baseline;
-        }
-
-        .stats-label {
-            flex: 1;
-            color: var(--text);
-        }
-
-        .stats-value {
-            font-weight: bold;
-            margin-left: 10px;
-            color: var(--text);
         }
 
         footer {
@@ -346,31 +300,6 @@
             justify-content: flex-end;
             margin-top: 1rem;
             gap: 1rem;
-        }
-
-        .counter {
-            background-color: var(--highlight);
-            padding: 1rem;
-            border-radius: 8px;
-            margin: 1rem 0;
-            font-size: 0.9rem;
-            display: none;
-        }
-
-        .counter-row {
-            display: flex;
-            margin-bottom: 0.5rem;
-        }
-
-        .counter-label {
-            flex: 1;
-            color: var(--text);
-        }
-
-        .counter-value {
-            font-weight: bold;
-            margin-left: 10px;
-            color: var(--text);
         }
 
         .modal {
@@ -487,28 +416,6 @@
             <button class="btn btn-success" onclick="showAddScrapModal()">
                 <i class="fas fa-plus"></i> Add Scrap
             </button>
-            <button class="btn btn-warning" onclick="addLeadingZeros()">
-                <i class="fas fa-plus-circle"></i> Add Leading Zeros
-            </button>
-        </div>
-
-        <div id="counter" class="counter">
-            <div class="counter-row">
-                <span class="counter-label">Current Position:</span>
-                <span class="counter-value" id="currentPosition">0</span>
-            </div>
-            <div class="counter-row">
-                <span class="counter-label">Total Numbers:</span>
-                <span class="counter-value" id="totalNumbers">0</span>
-            </div>
-            <div class="counter-row">
-                <span class="counter-label">Open Numbers:</span>
-                <span class="counter-value" id="openNumbers">0</span>
-            </div>
-            <div class="counter-row">
-                <span class="counter-label">Closed Numbers:</span>
-                <span class="counter-value" id="closedNumbers">0</span>
-            </div>
         </div>
 
         <div class="output-section">
@@ -519,7 +426,7 @@
                     <span class="copy-tick"><i class="fas fa-check"></i></span>
                 </button>
                 <button class="btn btn-success btn-with-tick" onclick="copyNextNumber()">
-                    <i class="fas fa-copy"></i> Copy Next (#<span id="nextNumberIndex">0</span>)
+                    <i class="fas fa-copy"></i> Copy Next
                     <span class="copy-tick"><i class="fas fa-check"></i></span>
                 </button>
             </div>
@@ -527,19 +434,15 @@
                 <table id="dataTable">
                     <thead>
                         <tr>
-                            <th>A</th>
-                            <th>B</th>
-                            <th>C</th>
-                            <th>D</th>
-                            <th>E</th>
-                            <th>F (Status)</th>
-                            <th>G (Remarks)</th>
+                            <th>Phone Number</th>
+                            <th>Status</th>
+                            <th>Remarks</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-                        <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-                        <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+                        <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+                        <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+                        <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -753,20 +656,13 @@
                 return;
             }
 
-            // Parse scrap data (tab-separated columns)
+            // Parse scrap data (assuming first column is phone number)
             const scrapRows = scrapDataText.split(/\r\n|\n|\r/).filter(row => row.trim() !== '');
             
             scrapData = scrapRows.map(row => {
                 const columns = row.split(/\t/);
-                let phoneNumber = columns[0] ? columns[0].trim() : '';
-                
-                // Add leading zero if missing
-                if (/^3\d{9}$/.test(phoneNumber)) {
-                    phoneNumber = '0' + phoneNumber;
-                }
-                
+                const phoneNumber = columns[0] ? columns[0].trim() : '';
                 return {
-                    columns: columns,
                     number: phoneNumber,
                     normalizedNumber: normalizePhoneNumber(phoneNumber),
                     status: 'Pending',
@@ -780,42 +676,11 @@
             // Render the table
             renderTable(scrapData);
             
-            // Update counter
-            updateCounter();
-            
-            // Show counter
-            document.getElementById('counter').style.display = 'block';
-            
             // Close the modal and clear the textarea
             closeAddScrapModal();
             document.getElementById('scrapDataArea').textContent = '';
             
             alert(`Added ${scrapData.length} numbers from scrap data`);
-        }
-
-        function addLeadingZeros() {
-            if (scrapData.length === 0) {
-                alert('No scrap data to process. Please add scrap data first.');
-                return;
-            }
-            
-            let modifiedCount = 0;
-            
-            scrapData.forEach(item => {
-                // Check if the number is missing leading zero (Pakistan number pattern)
-                if (/^3\d{9}$/.test(item.number)) {
-                    item.number = '0' + item.number;
-                    item.normalizedNumber = normalizePhoneNumber(item.number);
-                    modifiedCount++;
-                }
-            });
-            
-            if (modifiedCount > 0) {
-                renderTable(scrapData);
-                alert(`Added leading zeros to ${modifiedCount} numbers`);
-            } else {
-                alert('No numbers needed leading zeros added');
-            }
         }
 
         function processCCData() {
@@ -833,9 +698,6 @@
 
             // Parse CC data to extract phone numbers and staff IDs
             const ccRows = ccDataText.split(/\r\n|\n|\r/).filter(row => row.trim() !== '');
-            
-            let openCount = 0;
-            let closedCount = 0;
             
             // Process each scrap data item
             scrapData.forEach(item => {
@@ -855,31 +717,24 @@
                         if (obAgentIDs.has(staffId)) {
                             item.status = 'Closed';
                             item.remarks = `OB Agent ID ${staffId} found`;
-                            closedCount++;
                         } else {
                             item.status = 'Open';
                             item.remarks = 'No OB Agent ID found';
-                            openCount++;
                         }
                     } else {
                         item.status = 'Open';
                         item.remarks = 'No Staff ID found in record';
-                        openCount++;
                     }
                 } else {
                     item.status = 'Open';
                     item.remarks = 'No matching record found in CC data';
-                    openCount++;
                 }
             });
 
             // Render the updated table
             renderTable(scrapData);
             
-            // Update counter
-            updateCounter();
-            
-            alert(`Processing complete. ${closedCount} numbers marked as Closed, ${openCount} as Open.`);
+            alert('Processing complete. Status updated for all numbers.');
         }
 
         function renderTable(data) {
@@ -891,7 +746,7 @@
                 // Add empty rows for better UI
                 for (let i = 0; i < 3; i++) {
                     const row = document.createElement('tr');
-                    for (let j = 0; j < 7; j++) {
+                    for (let j = 0; j < 3; j++) {
                         const td = document.createElement('td');
                         td.innerHTML = '&nbsp;';
                         row.appendChild(td);
@@ -904,53 +759,25 @@
             data.forEach(item => {
                 const row = document.createElement('tr');
                 
-                // Add all columns from scrap data
-                for (let i = 0; i < 5 && i < item.columns.length; i++) {
-                    const cell = document.createElement('td');
-                    cell.textContent = item.columns[i] || '';
-                    row.appendChild(cell);
-                }
+                const numberCell = document.createElement('td');
+                numberCell.textContent = item.number;
+                row.appendChild(numberCell);
                 
-                // Add empty cells if there are fewer than 5 columns
-                for (let i = item.columns.length; i < 5; i++) {
-                    const cell = document.createElement('td');
-                    cell.innerHTML = '&nbsp;';
-                    row.appendChild(cell);
-                }
-                
-                // Add status cell
                 const statusCell = document.createElement('td');
                 statusCell.textContent = item.status;
                 if (item.status === 'Open') {
                     statusCell.classList.add('open-status');
                 } else if (item.status === 'Closed') {
                     statusCell.classList.add('closed-status');
-                } else {
-                    statusCell.classList.add('pending-status');
                 }
                 row.appendChild(statusCell);
                 
-                // Add remarks cell
                 const remarksCell = document.createElement('td');
                 remarksCell.textContent = item.remarks;
                 row.appendChild(remarksCell);
                 
                 tbody.appendChild(row);
             });
-        }
-
-        function updateCounter() {
-            document.getElementById('currentPosition').textContent = currentIndex + 1;
-            document.getElementById('totalNumbers').textContent = scrapData.length;
-            
-            const openCount = scrapData.filter(item => item.status === 'Open').length;
-            const closedCount = scrapData.filter(item => item.status === 'Closed').length;
-            
-            document.getElementById('openNumbers').textContent = openCount;
-            document.getElementById('closedNumbers').textContent = closedCount;
-            
-            // Update next number index
-            document.getElementById('nextNumberIndex').textContent = currentIndex + 1;
         }
 
         function clearCCData() {
@@ -963,20 +790,9 @@
                 return;
             }
             
-            // Create CSV-like text with all columns
-            const headers = ['A', 'B', 'C', 'D', 'E', 'F (Status)', 'G (Remarks)'];
-            const rows = scrapData.map(item => [
-                ...item.columns.slice(0, 5),
-                item.status,
-                item.remarks
-            ]);
-            
-            // Ensure we have 5 columns for each row
-            rows.forEach(row => {
-                while (row.length < 5) row.push('');
-                row.push(row[5] || ''); // Status
-                row.push(row[6] || ''); // Remarks
-            });
+            // Create CSV-like text
+            const headers = ['Phone Number', 'Status', 'Remarks'];
+            const rows = scrapData.map(item => [item.number, item.status, item.remarks]);
             
             const csvContent = [headers, ...rows].map(row => row.join('\t')).join('\n');
             
@@ -1002,8 +818,7 @@
                 currentIndex = 0; // Reset to start
             }
             
-            const item = scrapData[currentIndex];
-            const numberToCopy = item.number;
+            const numberToCopy = scrapData[currentIndex].number;
             
             navigator.clipboard.writeText(numberToCopy).then(() => {
                 const tick = document.querySelectorAll('.output-toolbar .copy-tick')[1];
@@ -1012,14 +827,8 @@
                     tick.style.display = 'none';
                 }, 2000);
                 
-                // Show which number was copied
-                alert(`Copied: ${numberToCopy}\n\nStatus: ${item.status}\nRemarks: ${item.remarks}`);
-                
                 // Move to next number
                 currentIndex++;
-                
-                // Update counter
-                updateCounter();
             }).catch(err => {
                 console.error('Failed to copy:', err);
                 alert('Failed to copy number. Please try again.');
